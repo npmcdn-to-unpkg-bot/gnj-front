@@ -6,6 +6,8 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 import { Login } from "../../models/login";
 import { LoginResult } from "../../models/loginresult";
 import { GivenjoyService } from "../../services/webapi/givenjoyservice";
+import { AuthService } from "../../services/connexion/authservice";
+import { WindowService } from "../../services/connexion/windowservice";
 
 @Component({
   moduleId: module.id,
@@ -43,7 +45,7 @@ import { GivenjoyService } from "../../services/webapi/givenjoyservice";
                         </a>
                     </div>
                     <div>
-                        <a href="#" class="btn btn-danger btn-lg">
+                        <a href="#" class="btn btn-danger btn-lg" (click)="googleConnexion()">
                             <i class="fa fa-google-plus" aria-hidden="true"></i>
                             <span class="sociallabel">Se connecter avec Google+</span>
                         </a>
@@ -51,7 +53,7 @@ import { GivenjoyService } from "../../services/webapi/givenjoyservice";
                 <div>
             </div>
     `,
-    providers: [HTTP_PROVIDERS, GivenjoyService],
+    providers: [HTTP_PROVIDERS, GivenjoyService, AuthService, WindowService],
     directives: [ROUTER_DIRECTIVES]
 })
 
@@ -61,7 +63,7 @@ export class LoginComponent {
     login:Login; 
     loginResult:LoginResult;
 
-    constructor(private service:GivenjoyService) {
+    constructor(private service:GivenjoyService, private auth:AuthService) {
         this.login=new Login("","",false);
     }
 
@@ -73,6 +75,11 @@ export class LoginComponent {
 
     connect(model:LoginResult) {
         
+    }
+
+    googleConnexion() {
+        this.auth.doLogin();
+
     }
 
 }
