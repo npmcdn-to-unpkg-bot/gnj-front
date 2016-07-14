@@ -10,6 +10,9 @@
     },
     "leaflet/leaflet.d.ts": {
       "commit": "c984c4b77427a6a0a2457d46d96f5dfe5148681b"
+    },
+    "fbsdk/fbsdk.d.ts": {
+      "commit": "b66d6115d7a8cd74af45e59d36c4447e5d1e9a52"
     }
   }
 }

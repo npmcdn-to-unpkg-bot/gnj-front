@@ -7,6 +7,7 @@ import { Login } from "../../models/login";
 import { LoginResult } from "../../models/loginresult";
 import { GivenjoyService } from "../../services/webapi/givenjoyservice";
 import { AuthService } from "../../services/connexion/authservice";
+import { FbService } from "../../services/connexion/fbservice";
 import { WindowService } from "../../services/connexion/windowservice";
 
 @Component({
@@ -36,10 +37,11 @@ import { WindowService } from "../../services/connexion/windowservice";
                             <a href="#">Mot de passe oublié</a>
                         </div>
                     </form>
-                </div>
+                </div>                
+                <div id="fb-root"></div>
                 <div id="socialconnexion" class="col-md-4 col-md-offset-2 col-sm-6 col-xs-12">
                     <div>
-                        <a href="#" class="btn btn-primary btn-lg">
+                        <a href="#" class="btn btn-primary btn-lg" (click)="facebookConnexion()">
                             <i class="fa fa-facebook" aria-hidden="true"></i>
                             <span class="sociallabel">Se connecter avec Facebook</span>
                         </a>
@@ -53,7 +55,7 @@ import { WindowService } from "../../services/connexion/windowservice";
                 <div>
             </div>
     `,
-    providers: [HTTP_PROVIDERS, GivenjoyService, AuthService, WindowService],
+    providers: [HTTP_PROVIDERS, GivenjoyService, AuthService, WindowService, FbService],
     directives: [ROUTER_DIRECTIVES]
 })
 
@@ -63,7 +65,7 @@ export class LoginComponent {
     login:Login; 
     loginResult:LoginResult;
 
-    constructor(private service:GivenjoyService, private auth:AuthService) {
+    constructor(private service:GivenjoyService, private auth:AuthService, private fb:FbService) {
         this.login=new Login("","",false);
     }
 
@@ -79,7 +81,11 @@ export class LoginComponent {
 
     googleConnexion() {
         this.auth.doLogin();
+    }
 
+    facebookConnexion() {
+        console.log(this.fb.isconnected());
+        this.fb.connectFb();
     }
 
 }

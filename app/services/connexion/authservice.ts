@@ -24,7 +24,7 @@ export class AuthService {
         //noinspection TypeScriptUnresolvedFunction
         http.get('config/config.google.json')
             .map(res => res.json())
-            .subscribe((config:any) => {
+            .subscribe(config => {
                 this.oAuthCallbackUrl = config.callbackUrl;
                 this.oAuthTokenUrl = config.implicitGrantUrl;
                 this.oAuthTokenUrl = this.oAuthTokenUrl
@@ -34,12 +34,13 @@ export class AuthService {
                 this.oAuthUserUrl = config.userInfoUrl;
                 this.oAuthUserNameField = config.userInfoNameField;
             });
+        console.log(this.oAuthTokenUrl);
     }
 
     public doLogin() {
-        console.log("Start LOGIN");
 
         var loopCount = this.loopCount;
+        console.log(this.oAuthTokenUrl);
         this.windowHandle = this.windows.createWindow(this.oAuthTokenUrl, 'OAuth2 Login');
 
         this.intervalId = setInterval(() => {
@@ -52,8 +53,9 @@ export class AuthService {
                 try {
                     href = this.windowHandle.location.href;
                 } catch (e) {
-                    //console.log('Error:', e);
+                    console.log('Error:', e);
                 }
+                
                 if (href != null) {
                     var re = /access_token=(.*)/;
                     var found = href.match(re);
