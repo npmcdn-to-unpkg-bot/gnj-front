@@ -1,62 +1,79 @@
-import { Injectable } from "@angular/core";
-import { Http, Headers } from '@angular/http';
+import { Injectable, EventEmitter } from "@angular/core";
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { LoginInfo } from '../../models/logininfo';
+import "rxjs/add/operator/toPromise";
 
 @Injectable()
 export class FbService {
-
+    ///private eventEmitter = new EventEmitter(); 
     
     constructor(private http:Http) {
-                   
-        http.get('config/config.fb.json')
-        .map(res => res.json())
-        .subscribe((config:any) => {
-            FB.init({
-                "appId": config.appid,
-                "xfbml":config.xfbml,
-                "version":config.version
-            });                    
-        });
-
     }
 
     public connectFb() {
-       
-        FB.login(function (r:any) {
-           FB.api('/me', 'get', { 
-                    access_token: r.authResponse.accessToken,
-                    fields: 'first_name,last_name,email'
-            }, function(resp:any) {
-                 let result = {
-                    "status": r.status,
-                    "accessToken": r.authResponse.accessToken,
-                    "userID":r.authResponse.userID,
-                    "expiresIn": r.authResponse.expiresIn,
-                    "email":resp.email,
-                    "lastname":resp.last_name,
-                    "firstname":resp.first_name
-                }
-                console.log(result);
-            });           
-        },
-        {
-            scope: 'email',
-        });
+        var _that = this;
+        this.http.get('config/config.fb.json')
+            .map(res => res.json())
+            .subscribe(config => {
+                FB.init({
+                    "appId": config.appid,
+                    "xfbml":config.xfbml,
+                    "version":config.version
+                });           
+                FB.login(function (r:any) {
+                    FB.api('/me', 'get', { 
+                            access_token: r.authResponse.accessToken,
+                            fields: 'first_name,last_name,email'
+                    }, function(resp:any) {
+                        var info = new LoginInfo(
+                            r.status,
+                            r.authResponse.accessToken,
+                            r.authResponse.userID,
+                            r.authResponse.expiresIn,
+                            resp.email,
+                            resp.first_name,
+                            resp.last_name,
+                            "Facebook",
+                            null,
+                            null
+                        );
+                        localStorage.setItem("ConnexionMock", JSON.stringify(info));
+                    });  
+                }, 
+                {scope: 'email'});
+            });
+        
     }
 
-    public isconnected():Boolean {
-        var isConnected:string;
 
-        FB.getLoginStatus(function(res) {
-            isConnected = res.status;
-        });
+
+    public isconnected():Boolean {
+        var result = localStorage.getItem("ConnexionMock");
         
-        return isConnected === "connected";
+        if (result == null || result == "undefined" || result == "")
+            return false;
+
+        var info = JSON.parse(result);
+        return (info.Status === "connected")
+    }
+
+    public fullname():String {
+         var result = localStorage.getItem("ConnexionMock");
+        
+        if (result == null || result == "undefined" || result == "")
+            return "";
+
+        var info = JSON.parse(result);
+        return info.FirstName + " " + info.LastName;
     }
 
     public disconnectFb() {
-        FB.logout(function (result) {
-            // TODO
-        })
+         localStorage.setItem("ConnexionMock", JSON.stringify({"Status":false}));
+    }
+
+    private handleError(error:any) {
+        console.error("error ", error);
+        return Promise.reject(error.message || error);
     }
 
 }

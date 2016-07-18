@@ -41,21 +41,21 @@ import { WindowService } from "../../services/connexion/windowservice";
                 <div id="fb-root"></div>
                 <div id="socialconnexion" class="col-md-4 col-md-offset-2 col-sm-6 col-xs-12">
                     <div>
-                        <a href="#" class="btn btn-primary btn-lg" (click)="facebookConnexion()">
+                        <div class="btn btn-primary btn-lg" (click)="facebookConnexion()">
                             <i class="fa fa-facebook" aria-hidden="true"></i>
                             <span class="sociallabel">Se connecter avec Facebook</span>
-                        </a>
+                        </div>
                     </div>
                     <div>
-                        <a href="#" class="btn btn-danger btn-lg" (click)="googleConnexion()">
+                        <div class="btn btn-danger btn-lg" (click)="googleConnexion()">
                             <i class="fa fa-google-plus" aria-hidden="true"></i>
                             <span class="sociallabel">Se connecter avec Google+</span>
-                        </a>
+                        </div>
                     <div>
                 <div>
             </div>
     `,
-    providers: [HTTP_PROVIDERS, GivenjoyService, AuthService, WindowService, FbService],
+    providers: [],
     directives: [ROUTER_DIRECTIVES]
 })
 
@@ -84,8 +84,8 @@ export class LoginComponent {
     }
 
     facebookConnexion() {
-        console.log(this.fb.isconnected());
         this.fb.connectFb();
+        
     }
 
 }

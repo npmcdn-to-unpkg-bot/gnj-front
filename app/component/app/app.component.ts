@@ -7,9 +7,9 @@ import { NavbarComponent } from '../navbar/navbar.component';
     selector: 'givenjoy',
     template: ` <navbar></navbar>
                 <router-outlet></router-outlet>`,
-    directives: [NavbarComponent, ROUTER_DIRECTIVES],
+    directives: [NavbarComponent, ROUTER_DIRECTIVES]
 })
 
 export class AppComponent {
 
- }
+}
